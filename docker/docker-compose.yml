@@ -1,0 +1,17 @@
+version: '2'
+services:
+    database:
+        image: mysql:5.7
+        environment:
+            - MYSQL_ROOT_PASSWORD=123456
+
+    php-server:
+        build: .
+        tty: true
+        links:
+            - database:mysql
+        ports:
+            - 8081:8081
+        volumes:
+            - ../:/boilerplate
+        working_dir: /boilerplate
