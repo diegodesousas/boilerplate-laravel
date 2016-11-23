@@ -14,6 +14,8 @@ class Book extends Model
         'pages'
     ];
 
+    public $timestamps = false;
+
     public function authors()
     {
         return $this->belongsToMany(Author::class, 'relation_authors_books', 'book_id', 'author_id');

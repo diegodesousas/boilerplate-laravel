@@ -13,6 +13,10 @@ class Author extends Model
         'name'
     ];
 
+    public $timestamps = false;
+
+    public $with = ['books'];
+
     public function books()
     {
         return $this->belongsToMany(Book::class, 'relation_authors_books', 'author_id', 'book_id');
