@@ -17,8 +17,24 @@ class AuthorTest extends TestCase
     {
         $author = $this->scenarios->authorWithBooks();
 
-        $this->get('api/author/' . $author->id);
+        $uri = route('author.show', [
+            'id' => $author->id
+        ]);
+
+        $this->get($uri);
 
         $this->assertResponseOk();
+
+        $this->seeJsonStructure([
+            'data' => [
+                'author' => [
+                    'id', 'name', 'books' => [
+                        '*' => [
+                            'id', 'name', 'pages'
+                        ]
+                    ]
+                ]
+            ]
+        ]);
     }
 }

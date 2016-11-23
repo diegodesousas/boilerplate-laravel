@@ -16,6 +16,8 @@ class Book extends Model
 
     public $timestamps = false;
 
+    protected $hidden = ['pivot'];
+
     public function authors()
     {
         return $this->belongsToMany(Author::class, 'relation_authors_books', 'book_id', 'author_id');

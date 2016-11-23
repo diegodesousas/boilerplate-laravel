@@ -17,6 +17,8 @@ class Author extends Model
 
     public $with = ['books'];
 
+    protected $hidden = ['pivot'];
+
     public function books()
     {
         return $this->belongsToMany(Book::class, 'relation_authors_books', 'author_id', 'book_id');
