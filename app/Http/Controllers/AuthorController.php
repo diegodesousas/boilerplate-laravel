@@ -2,20 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Model\Author;
+use App\Http\Requests\AuthorRequest;
 
 class AuthorController extends Controller
 {
-    public function show($id)
+    public function show(AuthorRequest $request)
     {
-        $author = Author::find($id);
-
-        $content = [
-            'data' => [
-                'author' => $author
-            ]
-        ];
-
-        return response()->json($content);
+        return rest_response([
+            'author' => $request->getAuthor()
+        ]);
     }
 }

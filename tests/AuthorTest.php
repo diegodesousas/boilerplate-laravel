@@ -37,4 +37,15 @@ class AuthorTest extends TestCase
             ]
         ]);
     }
+
+    public function testAuthorNotFound()
+    {
+        $uri = route('author.show', [
+            'id' => 0
+        ]);
+
+        $this->get($uri);
+
+        $this->assertResponseStatus(404);
+    }
 }
