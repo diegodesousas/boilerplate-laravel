@@ -48,4 +48,29 @@ class AuthorTest extends TestCase
 
         $this->assertResponseStatus(404);
     }
+
+    public function testIndexAuthor()
+    {
+        $this->scenarios->moreThenOneAuthorWithBooks(2, 1);
+
+        $uri = route('author.index');
+
+        $this->get($uri);
+
+        $this->assertResponseOk();
+
+        $this->seeJsonStructure([
+            'data' => [
+                'authors' => [
+                    '*' => [
+                        'id', 'name', 'books' => [
+                            '*' => [
+                                'id', 'name', 'pages'
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+    }
 }

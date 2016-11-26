@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Author;
 
 use App\Model\Author;
 use Illuminate\Foundation\Http\FormRequest;
@@ -13,19 +13,19 @@ class AuthorRequest extends FormRequest
     private $author;
 
     /**
-     * @param Author $author
-     */
-    protected function setAuthor(Author $author)
-    {
-        $this->author = $author;
-    }
-
-    /**
      * @return Author
      */
     public function getAuthor()
     {
         return $this->author;
+    }
+
+    /**
+     * @param Author $author
+     */
+    protected function setAuthor(Author $author)
+    {
+        $this->author = $author;
     }
 
     /**
