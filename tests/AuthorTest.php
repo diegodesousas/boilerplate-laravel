@@ -1,27 +1,46 @@
 <?php
 
 use App\Custom\Tests\Scenarios\AuthorScenarios;
+use App\Custom\Tests\Scenarios\OauthScenarios;
 
 class AuthorTest extends TestCase
 {
     use \Illuminate\Foundation\Testing\DatabaseTransactions;
 
-    protected $scenarios;
-    
+    protected $author_scenarios;
+
+    protected $oauth_scenarios;
+
+    protected $token;
+
     public function __construct()
     {
-        $this->scenarios = new AuthorScenarios();
+        $this->author_scenarios = new AuthorScenarios();
+
+        $this->oauth_scenarios = new OauthScenarios();
+    }
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->token = $this->oauth_scenarios->token();
+    }
+
+    protected function oauthHeader()
+    {
+        return ['Authorization' => 'Bearer ' . $this->token];
     }
 
     public function testGetAuthor()
     {
-        $author = $this->scenarios->authorWithBooks();
+        $author = $this->author_scenarios->authorWithBooks();
 
         $uri = route('author.show', [
             'id' => $author->id
         ]);
 
-        $this->get($uri);
+        $this->get($uri, $this->oauthHeader());
 
         $this->assertResponseOk();
 
@@ -44,18 +63,18 @@ class AuthorTest extends TestCase
             'id' => 0
         ]);
 
-        $this->get($uri);
+        $this->get($uri, $this->oauthHeader());
 
         $this->assertResponseStatus(404);
     }
 
     public function testIndexAuthor()
     {
-        $this->scenarios->moreThenOneAuthorWithBooks(2, 1);
+        $this->author_scenarios->moreThenOneAuthorWithBooks(2, 1);
 
         $uri = route('author.index');
 
-        $this->get($uri);
+        $this->get($uri, $this->oauthHeader());
 
         $this->assertResponseOk();
 
