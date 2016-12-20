@@ -20,7 +20,9 @@ $factory->define(PersonalAccessClient::class, function (Faker\Generator $faker) 
     return [
         'client_id' => function() {
 
-            return factory(Client::class)->create()->id;
+            return factory(Client::class)->create([
+                'personal_access_client' => true
+            ])->id;
         }
     ];
 });
