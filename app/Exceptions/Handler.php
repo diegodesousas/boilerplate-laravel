@@ -8,6 +8,7 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use League\OAuth2\Server\Exception\OAuthServerException;
 
 class Handler extends ExceptionHandler
 {
@@ -50,15 +51,15 @@ class Handler extends ExceptionHandler
         $default_response = parent::render($request, $exception);
 
         return $this->handleDefaultResponse($default_response, $request, $exception);
-}
+    }
 
-/**
- * Convert an authentication exception into an unauthenticated response.
- *
- * @param  \Illuminate\Http\Request  $request
- * @param  \Illuminate\Auth\AuthenticationException  $exception
- * @return \Illuminate\Http\Response
- */
+    /**
+     * Convert an authentication exception into an unauthenticated response.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Auth\AuthenticationException  $exception
+     * @return \Illuminate\Http\Response
+     */
     protected function unauthenticated($request, AuthenticationException $exception)
     {
         if ($request->expectsJson()) {
