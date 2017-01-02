@@ -15,4 +15,4 @@ services:
         volumes:
             - ../:/boilerplate
         working_dir: /boilerplate
-        command: bash -c /boilerplate/docker/init.sh
+        command: /boilerplate/docker/init.sh
