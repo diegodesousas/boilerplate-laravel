@@ -21,3 +21,7 @@ RUN apt-get install -y git
 
 #external ports
 EXPOSE 8081
+
+RUN useradd -ms /bin/bash server-user
+
+USER server-user 
