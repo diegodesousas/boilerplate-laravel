@@ -92,4 +92,113 @@ class AuthorTest extends TestCase
             ]
         ]);
     }
+
+    public function testSaveAuthor()
+    {
+        $uri = route('author.save');
+
+        $post_data = [
+            'author' => [
+                'name' => 'George Orwell'
+            ]
+        ];
+
+        $this->post($uri, $post_data, $this->oauthHeader());
+
+        $this->assertResponseOk();
+
+        $this->seeInDatabase('authors', $post_data['author']);
+    }
+
+    public function testSaveAuthorValidationFails()
+    {
+        $uri = route('author.save');
+
+        $post_data = [
+            'author' => [
+                'name' => null
+            ]
+        ];
+
+        $this->post($uri, $post_data, $this->oauthHeader());
+
+        $this->assertResponseStatus(422);
+
+        $this->seeJsonEquals([
+            'errors' => [
+                'author.name' => ['The author.name field is required.']
+            ]
+        ]);
+
+        $this->notSeeInDatabase('authors', $post_data['author']);
+    }
+
+    public function testUpdateAuthor()
+    {
+        $author = $this->author_scenarios->authorWithBooks();
+
+        $uri = route('author.update', [
+            'id' => $author->id
+        ]);
+
+        $post_data = [
+            'author' => [
+                'name' => 'Neil Gaiman'
+            ]
+        ];
+
+        $this->put($uri, $post_data, $this->oauthHeader());
+
+        $this->assertResponseOk();
+
+        $this->seeJsonEquals([
+            'data' => [
+                'message' => 'Autor atualizado com sucesso.'
+            ]
+        ]);
+
+        $this->seeInDatabase('authors', $post_data['author']);
+    }
+
+    public function testUpdateInvalidAuthor()
+    {
+        $uri = route('author.update', [
+            'id' => 0
+        ]);
+
+        $post_data = [
+            'author' => [
+                'name' => 'Neil Gaiman'
+            ]
+        ];
+
+        $this->put($uri, $post_data, $this->oauthHeader());
+
+        $this->assertResponseStatus(422);
+
+        $this->seeJsonEquals([
+            'errors' => [
+                'author.id' => ['The selected author.id is invalid.']
+            ]
+        ]);
+
+        $this->notSeeInDatabase('authors', $post_data['author']);
+    }
+
+    public function testDeleteAuthor()
+    {
+        $author = $this->author_scenarios->authorWithBooks();
+
+        $uri = route('author.delete', [
+            'id' => $author->id
+        ]);
+
+        $this->delete($uri, [], $this->oauthHeader());
+
+        $this->assertResponseOk();
+
+        $this->notSeeInDatabase('authors', [
+            'id' => $author->id
+        ]);
+    }
 }

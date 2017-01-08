@@ -38,7 +38,9 @@ class AuthTest extends TestCase
             'password' => bcrypt($password)
         ]);
 
-        $this->post('oauth/token', [
+        $uri = route('auth.issue_token');
+
+        $this->post($uri, [
             'grant_type' => 'password',
             'client_id' => $client->id,
             'client_secret' => $secret,
@@ -84,7 +86,9 @@ class AuthTest extends TestCase
             'password' => bcrypt($password)
         ]);
 
-        $this->post('oauth/token', [
+        $uri = route('auth.issue_token');
+
+        $this->post($uri, [
             'grant_type' => 'password',
             'client_id' => $client->id,
             'client_secret' => $secret,

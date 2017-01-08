@@ -3,7 +3,7 @@
 namespace App\Exceptions;
 
 use Exception;
-use Illuminate\Auth\AuthenticationException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -54,22 +54,6 @@ class Handler extends ExceptionHandler
     }
 
     /**
-     * Convert an authentication exception into an unauthenticated response.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Illuminate\Auth\AuthenticationException  $exception
-     * @return \Illuminate\Http\Response
-     */
-    protected function unauthenticated($request, AuthenticationException $exception)
-    {
-        if ($request->expectsJson()) {
-            return response()->json(['error' => 'Unauthenticated.'], 401);
-        }
-
-        return redirect()->guest('login');
-    }
-
-    /**
      * Tratamento default para os erros inesperados da aplicação
      *
      * @param Response $response
@@ -87,5 +71,17 @@ class Handler extends ExceptionHandler
         ], $response->getStatusCode());
 
         return $response;
+    }
+
+    protected function prepareException(Exception $exception)
+    {
+        $e = parent::prepareException($exception);
+
+        if ($e instanceof OAuthServerException) {
+
+            $e = new HttpException(401, $e->getMessage());
+        }
+
+        return $e;
     }
 }
